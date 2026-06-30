@@ -1,0 +1,14 @@
+[project]
+name = "drama-smallville-backend"
+version = "0.1.0"
+description = "Drama Smallville — 短剧虚拟试播台后端"
+requires-python = ">=3.13"
+
+[tool.pytest.ini_options]
+# backend 目录本身就在 pythonpath 上,这样 tests/ 里不必再 sys.path.insert
+pythonpath = ["."]
+testpaths = ["tests"]
+# trace_store 会写真实文件,测试里若不慎触发也要可预测
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]

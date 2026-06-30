@@ -5,12 +5,6 @@
 
 from __future__ import annotations
 
-import sys
-import os
-
-# 确保能 import backend 模块
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import pytest
 from schemas.audience_distribution import AudienceDistributionConfig
 from tests.factories import make_test_world, make_test_draft, make_test_persona

@@ -174,7 +174,9 @@ type SupportState = {
 type TabKey = "overview" | "drafts" | "audience" | "evidence";
 type AudienceMetric = "continue_watch" | "positive_review" | "pay" | "comment" | "share" | "dropoff";
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000";
+// 同源相对路径:dev 时 vite proxy 转发到后端 8000,prod 时 backend serve dist 单端口。
+// 不再硬编码端口,不依赖 CORS。
+const API_BASE = import.meta.env.VITE_API_BASE || "";
 
 const platformLabels: Record<string, string> = {
   wechat_minidrama: "微信小程序短剧",

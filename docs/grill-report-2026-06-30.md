@@ -67,11 +67,11 @@
 
 **证据**：ScriptMind 作为外部依赖，seam 设计得好——`llm/gateway.py` 是 port，`script_mind_client.py` 是 adapter，`demo_runner` 注入 gateway，ADR-0002 降级路径实测通过。这是对的。
 
-**缺口**：
-- **frontend / backend / ui-demo 三者割裂**：`ui-demo/writers-room-demo.html` 是纯静态 mockup（零 fetch，不与后端通信）；`frontend/` 是 Vite+React 但 `src/` 只有 `main.tsx` + `styles.css` 空壳，且无 `tsconfig.json`；backend 的 `static/index.html` 又是另一套。三个"前端"互不相干，没有 seam。
+**缺口（已修复，见下方更正）**：
+- ~~**frontend / backend / ui-demo 三者割裂**~~ **【更正：严重误判】** 实际 `frontend/` 是 31KB 的完整 React 应用,已 fetch 后端 4 个端点(simple-run/population/traces/memory),有完整 Tab 布局和报告渲染。误判原因:只看文件列表和无 tsconfig,没读 main.tsx 内容。**已于 2026-06-30 修复:补 tsconfig.json + vite.config.ts(含 proxy),API_BASE 改同源,前后端实测打通。** 详见 ADR-0006。
 - 前后端没有约定接口契约（OpenAPI 在 backend，但 frontend 不消费它）。
 
-**下一个该回答的问题**：这三个"前端"到底留哪个？（推荐：砍 ui-demo 和 frontend 空壳，留 backend/static/index.html 做最小可路演 UI，或明确 frontend 是 P1 目标并补 tsconfig + 接口消费。现在三套并存是噪音。）
+**下一个该回答的问题**：~~这三个"前端"到底留哪个？~~ **已决策:frontend 是唯一应用前端,backend serve dist 生产模式,ui-demo 存档,backend/static 降级 fallback。**
 
 ### 6. 可测试性 — 有缺口（3.5，基线已修）
 

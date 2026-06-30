@@ -1,0 +1,79 @@
+{
+  "schema_version": "real_audience_catalog_v1",
+  "data_boundary": "public_only",
+  "platforms": [
+    {
+      "platform_type": "xidian_short_drama",
+      "display_name": "喜点短剧",
+      "content_family": "short_drama",
+      "app_store_search_terms": ["喜点短剧", "喜点"],
+      "public_comment_urls": [],
+      "collection_status": "app_store_supported_requires_validation",
+      "source_notes": ["Use public app reviews when the App Store search result matches the platform name."]
+    },
+    {
+      "platform_type": "hongguo_short_drama",
+      "display_name": "红果短剧",
+      "content_family": "short_drama",
+      "app_store_search_terms": ["红果短剧"],
+      "public_comment_urls": [],
+      "collection_status": "app_store_supported",
+      "source_notes": ["Public app reviews are available through Apple review RSS when the app lookup succeeds."]
+    },
+    {
+      "platform_type": "douyin_short_drama",
+      "display_name": "抖音短剧",
+      "content_family": "short_drama",
+      "app_store_search_terms": ["抖音"],
+      "public_comment_urls": [],
+      "collection_status": "app_store_supported_public_comments_require_seed_url",
+      "source_notes": ["Do not bypass anti-bot controls. Use official/open public pages only when seed URLs are provided."]
+    },
+    {
+      "platform_type": "kuaishou_short_drama",
+      "display_name": "快手短剧",
+      "content_family": "short_drama",
+      "app_store_search_terms": ["快手"],
+      "public_comment_urls": [],
+      "collection_status": "app_store_supported_public_comments_require_seed_url",
+      "source_notes": ["Prefer official/open public sources; dynamic comment pages require explicit seed URLs."]
+    },
+    {
+      "platform_type": "fanqie_web_novel",
+      "display_name": "番茄小说",
+      "content_family": "web_novel",
+      "app_store_search_terms": ["番茄小说"],
+      "public_comment_urls": [],
+      "collection_status": "app_store_supported_public_comments_require_seed_url",
+      "source_notes": ["Public web comments may be dynamic; use configured public URLs only."]
+    },
+    {
+      "platform_type": "jinjiang",
+      "display_name": "晋江文学城",
+      "content_family": "web_novel",
+      "app_store_search_terms": ["晋江小说阅读", "晋江文学城"],
+      "public_comment_urls": [],
+      "collection_status": "app_store_supported_static_pages_require_seed_url",
+      "source_notes": ["Static public review pages can be collected when seed URLs are configured."]
+    },
+    {
+      "platform_type": "qimao_web_novel",
+      "display_name": "七猫小说",
+      "content_family": "web_novel",
+      "app_store_search_terms": ["七猫免费小说", "七猫小说"],
+      "public_comment_urls": [],
+      "collection_status": "app_store_supported",
+      "source_notes": ["Public app reviews are available through Apple review RSS when the app lookup succeeds."]
+    },
+    {
+      "platform_type": "qidian",
+      "display_name": "起点读书",
+      "content_family": "web_novel",
+      "app_store_search_terms": ["起点读书"],
+      "public_comment_urls": [],
+      "collection_status": "app_store_supported_static_pages_require_seed_url",
+      "source_notes": ["Static public web comments should be collected only from configured URLs."]
+    }
+  ]
+}
+

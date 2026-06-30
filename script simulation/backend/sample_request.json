@@ -1,0 +1,27 @@
+{
+  "project_id": "demo_001",
+  "title": "她从火光中归来",
+  "format": "short_drama",
+  "platform_type": "wechat_minidrama",
+  "genre": ["女频", "复仇", "豪门"],
+  "business_goal": "paid_conversion",
+  "materials": {
+    "character_bible": "女主林知夏清醒强势，男主顾沉隐瞒旧事，养父是真正幕后黑手。",
+    "world_setting": "豪门复仇短剧，小程序付费场景。",
+    "previous_synopsis": "第8集末尾，女主已经发现男主当年隐瞒真相，但还不知道真正幕后黑手是养父。",
+    "current_draft": "女主准备继续调查，但男主试图靠近解释。",
+    "author_intent": "希望女主保持清醒强势，不要立刻原谅男主。",
+    "author_style": ["强女主", "高反转", "克制虐恋"],
+    "constraints": ["女主不能显得蠢", "不能立刻原谅男主"]
+  },
+  "generation_request": {
+    "chapter_position": "paid_conversion_point",
+    "chapter_index": null,
+    "episode_index": 8,
+    "desired_candidate_count": 3,
+    "target_output": "plot_direction",
+    "must_keep_elements": ["女主主动性", "养父线"],
+    "avoid_elements": ["立刻和解"]
+  }
+}
+

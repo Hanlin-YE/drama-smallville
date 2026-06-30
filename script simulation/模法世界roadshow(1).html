@@ -1,0 +1,1487 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neon Case Studio · 路演汇报</title>
+    <style>
+      :root {
+        --bg: #080b0f;
+        --bg-soft: #0e131a;
+        --panel: #121923;
+        --panel-2: #17212d;
+        --ink: #eef6f8;
+        --muted: #96a6b1;
+        --line: #263443;
+        --line-strong: #3a4b5e;
+        --cyan: #28d7e8;
+        --green: #65d98d;
+        --amber: #f4b84f;
+        --rose: #f06478;
+        --violet: #a58bff;
+        --paper: #f5f1e7;
+        --shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
+        font-family: Inter, "Noto Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          linear-gradient(90deg, rgba(40, 215, 232, 0.08) 1px, transparent 1px),
+          linear-gradient(rgba(240, 100, 120, 0.05) 1px, transparent 1px),
+          var(--bg);
+        background-size: 48px 48px, 48px 48px, auto;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(180deg, rgba(8, 11, 15, 0.18), rgba(8, 11, 15, 0.86)),
+          repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0, rgba(255, 255, 255, 0.025) 1px, transparent 1px, transparent 5px);
+        z-index: -1;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      .progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        width: 0;
+        background: linear-gradient(90deg, var(--cyan), var(--amber), var(--rose));
+        z-index: 30;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        border-bottom: 1px solid rgba(58, 75, 94, 0.76);
+        background: rgba(8, 11, 15, 0.9);
+        backdrop-filter: blur(16px);
+      }
+
+      .topbar-inner {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 220px;
+      }
+
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+        border: 1px solid rgba(40, 215, 232, 0.65);
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        color: var(--cyan);
+        font-weight: 900;
+        background: rgba(40, 215, 232, 0.08);
+      }
+
+      .brand strong,
+      .brand span {
+        display: block;
+      }
+
+      .brand strong {
+        font-size: 15px;
+      }
+
+      .brand span {
+        margin-top: 2px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .nav a {
+        padding: 8px 10px;
+        border-radius: 6px;
+        color: var(--muted);
+        font-size: 13px;
+        border: 1px solid transparent;
+      }
+
+      .nav a.active,
+      .nav a:hover {
+        color: var(--ink);
+        border-color: rgba(40, 215, 232, 0.32);
+        background: rgba(40, 215, 232, 0.08);
+      }
+
+      main {
+        overflow: hidden;
+      }
+
+      .section {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 76px 0;
+      }
+
+      .hero {
+        padding-top: 56px;
+        padding-bottom: 42px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.02fr) minmax(360px, 0.78fr);
+        gap: 34px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--cyan);
+        font-weight: 800;
+        font-size: 12px;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 18px;
+        height: 2px;
+        background: currentColor;
+      }
+
+      h1,
+      h2,
+      h3,
+      p,
+      a,
+      li,
+      span,
+      strong {
+        margin: 0;
+        overflow-wrap: break-word;
+      }
+
+      h1 {
+        margin-top: 18px;
+        max-width: 760px;
+        font-size: 78px;
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      h1 span {
+        color: transparent;
+        background: linear-gradient(90deg, var(--cyan), var(--paper), var(--amber));
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+
+      .hero-copy {
+        margin-top: 22px;
+        max-width: 700px;
+        color: #c8d6dd;
+        font-size: 18px;
+        line-height: 1.75;
+      }
+
+      .hero-actions {
+        margin-top: 28px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .button {
+        min-height: 42px;
+        padding: 10px 14px;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        font-weight: 800;
+        border: 1px solid var(--line-strong);
+        background: rgba(18, 25, 35, 0.88);
+      }
+
+      .button.primary {
+        color: #031015;
+        border-color: rgba(40, 215, 232, 0.82);
+        background: linear-gradient(90deg, var(--cyan), #9ff1d0);
+      }
+
+      .button small {
+        display: grid;
+        place-items: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 6px;
+        border: 1px solid currentColor;
+        font-size: 12px;
+      }
+
+      .hero-kpis {
+        margin-top: 30px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .kpi {
+        min-height: 102px;
+        border: 1px solid rgba(58, 75, 94, 0.78);
+        background: rgba(18, 25, 35, 0.74);
+        border-radius: 8px;
+        padding: 14px;
+      }
+
+      .kpi strong {
+        display: block;
+        color: var(--ink);
+        font-size: 22px;
+      }
+
+      .kpi span {
+        display: block;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .demo-console {
+        border: 1px solid rgba(58, 75, 94, 0.86);
+        border-radius: 8px;
+        background: rgba(14, 19, 26, 0.92);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .console-head {
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 0 14px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(8, 11, 15, 0.68);
+      }
+
+      .dots {
+        display: flex;
+        gap: 6px;
+      }
+
+      .dots i {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: block;
+      }
+
+      .dots i:nth-child(1) {
+        background: var(--rose);
+      }
+
+      .dots i:nth-child(2) {
+        background: var(--amber);
+      }
+
+      .dots i:nth-child(3) {
+        background: var(--green);
+      }
+
+      .console-head span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .console-body {
+        padding: 16px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .act-map {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .act-map div {
+        min-height: 78px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px;
+        background: var(--panel);
+      }
+
+      .act-map b,
+      .act-map span {
+        display: block;
+      }
+
+      .act-map b {
+        color: var(--paper);
+        font-size: 13px;
+      }
+
+      .act-map span {
+        margin-top: 7px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      .feed {
+        display: grid;
+        gap: 8px;
+      }
+
+      .feed-row {
+        display: grid;
+        grid-template-columns: 84px 1fr;
+        gap: 10px;
+        align-items: start;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px;
+        background: rgba(23, 33, 45, 0.76);
+      }
+
+      .feed-row strong {
+        color: var(--cyan);
+        font-size: 12px;
+      }
+
+      .feed-row p {
+        color: #d9e5ea;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .mini-bars {
+        display: grid;
+        gap: 9px;
+      }
+
+      .bar {
+        display: grid;
+        grid-template-columns: 86px 1fr 42px;
+        gap: 10px;
+        align-items: center;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .bar-track {
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(150, 166, 177, 0.15);
+        overflow: hidden;
+      }
+
+      .bar-track i {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--cyan), var(--green));
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: minmax(0, 0.76fr) minmax(260px, 0.24fr);
+        gap: 24px;
+        align-items: end;
+        margin-bottom: 28px;
+      }
+
+      .section-title h2 {
+        margin-top: 12px;
+        font-size: 46px;
+        line-height: 1.1;
+        letter-spacing: 0;
+      }
+
+      .section-title p,
+      .section-note {
+        margin-top: 12px;
+        color: var(--muted);
+        line-height: 1.75;
+      }
+
+      .section-note {
+        border-left: 2px solid var(--amber);
+        padding-left: 14px;
+      }
+
+      .band {
+        border-top: 1px solid rgba(58, 75, 94, 0.72);
+        border-bottom: 1px solid rgba(58, 75, 94, 0.72);
+        background: rgba(14, 19, 26, 0.48);
+      }
+
+      .problem-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .problem-card,
+      .feature-card,
+      .value-card,
+      .agent-card,
+      .roadmap-card {
+        border: 1px solid rgba(58, 75, 94, 0.78);
+        border-radius: 8px;
+        background: rgba(18, 25, 35, 0.82);
+        padding: 18px;
+      }
+
+      .problem-card {
+        min-height: 210px;
+        display: grid;
+        gap: 18px;
+        align-content: start;
+      }
+
+      .problem-card span,
+      .feature-card span,
+      .value-card span,
+      .agent-card span,
+      .roadmap-card span {
+        color: var(--cyan);
+        font-weight: 900;
+        font-size: 12px;
+      }
+
+      .problem-card h3,
+      .feature-card h3,
+      .value-card h3,
+      .agent-card h3,
+      .roadmap-card h3 {
+        margin-top: 10px;
+        font-size: 20px;
+        letter-spacing: 0;
+      }
+
+      .problem-card p,
+      .feature-card p,
+      .value-card p,
+      .agent-card p,
+      .roadmap-card p {
+        margin-top: 12px;
+        color: var(--muted);
+        line-height: 1.7;
+        font-size: 14px;
+      }
+
+      .quote-strip {
+        margin-top: 18px;
+        border: 1px solid rgba(244, 184, 79, 0.38);
+        border-radius: 8px;
+        padding: 16px 18px;
+        background: rgba(244, 184, 79, 0.08);
+        color: #f5e0b7;
+        line-height: 1.7;
+      }
+
+      .demo-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.74fr) minmax(320px, 0.26fr);
+        gap: 14px;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .feature-card {
+        min-height: 178px;
+      }
+
+      .character-showcase {
+        margin-bottom: 18px;
+        border: 1px solid rgba(58, 75, 94, 0.78);
+        border-radius: 8px;
+        padding: 18px;
+        background: rgba(18, 25, 35, 0.82);
+      }
+
+      .character-showcase h3,
+      .playbook h3 {
+        font-size: 22px;
+      }
+
+      .character-showcase > p,
+      .playbook > p {
+        margin-top: 10px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .cast-gallery {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .role-card {
+        position: relative;
+        min-height: 300px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #081018;
+      }
+
+      .role-card img {
+        width: 100%;
+        height: 100%;
+        min-height: 300px;
+        object-fit: cover;
+        display: block;
+        filter: saturate(1.05) contrast(1.04);
+      }
+
+      .role-caption {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 44px 12px 12px;
+        background: linear-gradient(180deg, transparent, rgba(8, 11, 15, 0.95));
+      }
+
+      .role-caption strong,
+      .role-caption span {
+        display: block;
+      }
+
+      .role-caption strong {
+        font-size: 16px;
+      }
+
+      .role-caption span {
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .playbook {
+        margin-top: 18px;
+        border: 1px solid rgba(40, 215, 232, 0.38);
+        border-radius: 8px;
+        padding: 18px;
+        background: linear-gradient(135deg, rgba(40, 215, 232, 0.1), rgba(23, 33, 45, 0.82));
+      }
+
+      .play-layout {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: minmax(0, 0.8fr) minmax(300px, 0.36fr);
+        gap: 14px;
+        align-items: stretch;
+      }
+
+      .play-steps {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .play-step {
+        min-height: 168px;
+        border: 1px solid rgba(58, 75, 94, 0.78);
+        border-radius: 8px;
+        padding: 14px;
+        background: rgba(8, 11, 15, 0.44);
+      }
+
+      .play-step b,
+      .route-card b {
+        display: inline-grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        color: #061014;
+        background: var(--cyan);
+        font-size: 13px;
+      }
+
+      .play-step strong,
+      .route-card strong {
+        display: block;
+        margin-top: 12px;
+        font-size: 15px;
+      }
+
+      .play-step p,
+      .route-card p {
+        margin-top: 9px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.58;
+      }
+
+      .route-card {
+        border: 1px solid rgba(244, 184, 79, 0.42);
+        border-radius: 8px;
+        padding: 16px;
+        background: rgba(244, 184, 79, 0.08);
+      }
+
+      .route-card b {
+        background: var(--amber);
+      }
+
+      .route-list {
+        margin: 14px 0 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 9px;
+      }
+
+      .route-list li {
+        display: grid;
+        grid-template-columns: 28px 1fr;
+        gap: 9px;
+        align-items: start;
+        color: #f1dfba;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .route-list li span {
+        display: inline-grid;
+        place-items: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        border: 1px solid rgba(244, 184, 79, 0.6);
+        color: var(--amber);
+        font-weight: 900;
+      }
+
+      .timeline {
+        border: 1px solid rgba(58, 75, 94, 0.78);
+        border-radius: 8px;
+        background: rgba(18, 25, 35, 0.82);
+        padding: 18px;
+      }
+
+      .timeline h3 {
+        font-size: 18px;
+      }
+
+      .timeline-item {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: 68px 1fr;
+        gap: 12px;
+        position: relative;
+      }
+
+      .timeline-item time {
+        color: var(--cyan);
+        font-weight: 900;
+        font-size: 12px;
+      }
+
+      .timeline-item strong {
+        display: block;
+        font-size: 14px;
+      }
+
+      .timeline-item p {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .engine-flow {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+
+      .flow-step {
+        min-height: 126px;
+        border: 1px solid rgba(58, 75, 94, 0.78);
+        border-radius: 8px;
+        padding: 14px;
+        background: rgba(18, 25, 35, 0.82);
+        position: relative;
+      }
+
+      .flow-step::after {
+        content: "";
+        position: absolute;
+        right: 14px;
+        bottom: 14px;
+        width: 30px;
+        height: 2px;
+        background: rgba(40, 215, 232, 0.5);
+      }
+
+      .flow-step:last-child::after {
+        display: none;
+      }
+
+      .flow-step b {
+        display: block;
+        color: var(--cyan);
+        font-size: 12px;
+      }
+
+      .flow-step strong {
+        display: block;
+        margin-top: 10px;
+        font-size: 16px;
+      }
+
+      .flow-step p {
+        margin-top: 9px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .engine-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 0.96fr) minmax(330px, 0.54fr);
+        gap: 14px;
+      }
+
+      .screen-mock {
+        border: 1px solid rgba(58, 75, 94, 0.78);
+        border-radius: 8px;
+        background: rgba(18, 25, 35, 0.82);
+        padding: 18px;
+      }
+
+      .screen-grid {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 0.74fr);
+        gap: 14px;
+      }
+
+      .input-mock,
+      .report-mock {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 14px;
+        background: rgba(8, 11, 15, 0.48);
+      }
+
+      .input-line {
+        min-height: 34px;
+        border: 1px solid rgba(150, 166, 177, 0.18);
+        border-radius: 6px;
+        margin-top: 10px;
+        background: rgba(150, 166, 177, 0.08);
+      }
+
+      .input-line.long {
+        min-height: 116px;
+      }
+
+      .score-card {
+        margin-top: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 12px;
+        background: rgba(23, 33, 45, 0.8);
+      }
+
+      .score-card strong {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 14px;
+      }
+
+      .score-card span {
+        color: var(--green);
+      }
+
+      .metric-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .metric-item {
+        border: 1px solid rgba(58, 75, 94, 0.78);
+        border-radius: 8px;
+        padding: 14px;
+        background: rgba(18, 25, 35, 0.82);
+      }
+
+      .metric-item strong {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 14px;
+      }
+
+      .metric-item span {
+        color: var(--amber);
+      }
+
+      .metric-item .bar-track {
+        margin-top: 10px;
+      }
+
+      .agent-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+      }
+
+      .agent-card {
+        min-height: 190px;
+      }
+
+      .business-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .value-card {
+        min-height: 232px;
+      }
+
+      .model-strip {
+        margin-top: 14px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .model-pill {
+        min-height: 84px;
+        border: 1px solid rgba(58, 75, 94, 0.78);
+        border-radius: 8px;
+        padding: 12px;
+        background: rgba(23, 33, 45, 0.7);
+      }
+
+      .model-pill strong {
+        display: block;
+        font-size: 14px;
+      }
+
+      .model-pill span {
+        display: block;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .roadmap {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .roadmap-card {
+        min-height: 360px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .roadmap-card .status {
+        margin-top: 16px;
+        width: fit-content;
+        border: 1px solid rgba(40, 215, 232, 0.4);
+        color: var(--cyan);
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .roadmap-card ul,
+      .check-list {
+        margin: 16px 0 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 10px;
+      }
+
+      .roadmap-card li,
+      .check-list li {
+        color: #c7d5dc;
+        line-height: 1.55;
+        font-size: 14px;
+        display: grid;
+        grid-template-columns: 16px 1fr;
+        gap: 9px;
+      }
+
+      .roadmap-card li::before,
+      .check-list li::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--green);
+        margin-top: 7px;
+      }
+
+      .close-panel {
+        margin-top: 18px;
+        border: 1px solid rgba(40, 215, 232, 0.38);
+        border-radius: 8px;
+        padding: 20px;
+        background: linear-gradient(135deg, rgba(40, 215, 232, 0.12), rgba(240, 100, 120, 0.08));
+      }
+
+      .close-panel h3 {
+        font-size: 24px;
+      }
+
+      .close-panel p {
+        margin-top: 12px;
+        color: #d9e5ea;
+        line-height: 1.75;
+      }
+
+      .footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 0 36px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .footer-inner {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      @media (max-width: 1020px) {
+        h1 {
+          font-size: 58px;
+        }
+
+        .section-title h2 {
+          font-size: 38px;
+        }
+
+        .hero,
+        .section-head,
+        .demo-grid,
+        .engine-layout,
+        .screen-grid,
+        .play-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-kpis,
+        .problem-grid,
+        .feature-grid,
+        .business-grid,
+        .roadmap,
+        .agent-grid,
+        .model-strip,
+        .cast-gallery,
+        .play-steps {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .engine-flow {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .flow-step::after {
+          display: none;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .topbar-inner {
+          height: auto;
+          padding: 12px 0;
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .nav {
+          justify-content: flex-start;
+        }
+
+        .section {
+          padding: 54px 0;
+        }
+
+        .hero {
+          padding-top: 34px;
+        }
+
+        h1 {
+          font-size: 42px;
+        }
+
+        .hero-copy {
+          font-size: 16px;
+        }
+
+        .hero-kpis,
+        .problem-grid,
+        .feature-grid,
+        .business-grid,
+        .roadmap,
+        .agent-grid,
+        .model-strip,
+        .engine-flow,
+        .cast-gallery,
+        .play-steps,
+        .act-map {
+          grid-template-columns: 1fr;
+        }
+
+        .bar {
+          grid-template-columns: 78px 1fr 34px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="progress" id="progress"></div>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="#hero" aria-label="Neon Case Studio 首页">
+          <span class="brand-mark">N</span>
+          <span>
+            <strong>Neon Case Studio</strong>
+            <span>Demo to Script Engine</span>
+          </span>
+        </a>
+        <nav class="nav" aria-label="页面导航">
+          <a href="#problem">痛点</a>
+          <a href="#demo">Demo</a>
+          <a href="#play">玩法</a>
+          <a href="#engine">引擎</a>
+          <a href="#business">商业价值</a>
+          <a href="#roadmap">路线图</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section id="hero" class="section hero">
+        <div>
+          <p class="eyebrow">Hackathon Roadshow Material</p>
+          <h1>从赛博探案 Demo 到 <span>AI 剧本试映风洞</span></h1>
+          <p class="hero-copy">
+            Neon Case Studio 已经证明：一个剧本世界可以被多 Agent、状态变量和实时推演流驱动。下一步，我们把这套能力产品化，服务短剧、网文写手和内容工作室，在上线前验证哪一幕更能带来留存、追更和付费。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#demo"><small>1</small>查看已完成 Demo</a>
+            <a class="button" href="#engine"><small>2</small>查看下一代引擎</a>
+          </div>
+          <div class="hero-kpis" aria-label="项目摘要">
+            <div class="kpi"><strong>3 幕</strong><span>零点电梯、记忆黑市、城市预测模型，形成完整推理链。</span></div>
+            <div class="kpi"><strong>4 类 Agent</strong><span>角色证词、隐瞒、信任和嫌疑会随选择变化。</span></div>
+            <div class="kpi"><strong>5 个状态</strong><span>真相、记忆、压力、信任、系统嫌疑持续更新。</span></div>
+            <div class="kpi"><strong>P1 已探索</strong><span>虚拟试播、观众画像、统计拟合和 Trace 保存。</span></div>
+          </div>
+        </div>
+
+        <aside class="demo-console" aria-label="Neon Case 产品演示 mockup">
+          <div class="console-head">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <span>Neon Case Live Sandbox</span>
+          </div>
+          <div class="console-body">
+            <div class="act-map">
+              <div><b>ACT 01</b><span>找出第一句谎言，但不急着定凶手。</span></div>
+              <div><b>ACT 02</b><span>判断谎言目的：自保、保护证人或保护系统。</span></div>
+              <div><b>ACT 03</b><span>选择公开口径，生成真相报告和结局。</span></div>
+            </div>
+            <div class="feed">
+              <div class="feed-row"><strong>任舷</strong><p>日志确实被替换，但电梯回执来自更高权限。</p></div>
+              <div class="feed-row"><strong>SORA-9</strong><p>预测没有失败。预测被执行。</p></div>
+              <div class="feed-row"><strong>沙盘</strong><p>系统嫌疑 +24，真相闭合度进入临界区。</p></div>
+            </div>
+            <div class="mini-bars">
+              <div class="bar"><span>真相闭合</span><div class="bar-track"><i style="width: 78%"></i></div><span>78</span></div>
+              <div class="bar"><span>记忆恢复</span><div class="bar-track"><i style="width: 64%"></i></div><span>64</span></div>
+              <div class="bar"><span>系统嫌疑</span><div class="bar-track"><i style="width: 86%"></i></div><span>86</span></div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section id="problem" class="band">
+        <div class="section">
+          <div class="section-head">
+            <div class="section-title">
+              <p class="eyebrow">Problem</p>
+              <h2>内容创作最贵的不是写作，而是上线后的试错</h2>
+              <p>短剧和网文的商业结果高度依赖节奏、钩子、爽点兑现和付费卡点。现在大量判断仍依赖经验：写完、上线、看数据，再回头改，成本高且反馈滞后。</p>
+            </div>
+            <p class="section-note">我们的目标不是替作者写完一切，而是在关键分幕前提供一个“虚拟观众试映场”。</p>
+          </div>
+
+          <div class="problem-grid">
+            <article class="problem-card">
+              <span>01</span>
+              <div>
+                <h3>下一幕怎么写，缺少低成本验证</h3>
+                <p>同一个设定可以走反杀、误会、揭密或暂缓路线，但作者很难在上线前知道哪条路线更能推动追更。</p>
+              </div>
+            </article>
+            <article class="problem-card">
+              <span>02</span>
+              <div>
+                <h3>爆款判断主观，难沉淀成团队资产</h3>
+                <p>爽点、虐点、付费点常被口头讨论，缺少结构化评分、分歧原因和可复盘 Trace。</p>
+              </div>
+            </article>
+            <article class="problem-card">
+              <span>03</span>
+              <div>
+                <h3>平台反馈滞后，改稿窗口很短</h3>
+                <p>完读率、评论和付费数据往往在发布后才出现，真正需要的是投放前的风险预警和改稿建议。</p>
+              </div>
+            </article>
+          </div>
+          <div class="quote-strip">
+            一句话：不是问 AI “这个剧本好不好”，而是让剧本先进入一组虚拟观众和平台 Agent 的试映场，提前看到它会在哪里追更、付费、吐槽或弃坑。
+          </div>
+        </div>
+      </section>
+
+      <section id="demo" class="section">
+        <div class="section-head">
+          <div class="section-title">
+            <p class="eyebrow">Current Demo</p>
+            <h2>Neon Case：可玩的多 Agent 剧情沙盘</h2>
+            <p>`情景式游戏` 不是静态互动小说，而是一个可以演化的悬疑世界。玩家每一幕的选择都会影响角色证词、世界状态、可选路线和最终结局。</p>
+          </div>
+          <p class="section-note">这个 Demo 证明了最小闭环：剧本可以被拆成角色、状态、线索、选择和报告。</p>
+        </div>
+
+        <div class="character-showcase" aria-label="Neon Case 角色展示">
+          <h3>先让听众认人：五张角色卡对应五条剧情力量</h3>
+          <p>Neon Case 的演示重点不是“谁长得像凶手”，而是每个角色的隐瞒都会推动世界状态变化。角色图让现场观众快速把证词、动机和路线对应起来。</p>
+          <div class="cast-gallery">
+            <article class="role-card">
+              <img src="../角色图片/01_林栖_赛博角色卡.png" alt="林栖赛博角色卡" loading="eager" decoding="async" />
+              <div class="role-caption"><strong>林栖</strong><span>死者 / 密钥源头，把训练库入口拆成四段。</span></div>
+            </article>
+            <article class="role-card">
+              <img src="../角色图片/02_任舷_赛博角色卡.png" alt="任舷赛博角色卡" loading="eager" decoding="async" />
+              <div class="role-caption"><strong>任舷</strong><span>企业安全主管，最像凶手，也可能只是遮掩者。</span></div>
+            </article>
+            <article class="role-card">
+              <img src="../角色图片/03_玛拉_赛博角色卡.png" alt="玛拉赛博角色卡" loading="eager" decoding="async" />
+              <div class="role-caption"><strong>玛拉</strong><span>地下记忆走私者，违法但可能是关键证人。</span></div>
+            </article>
+            <article class="role-card">
+              <img src="../角色图片/04_SORA-9_赛博角色卡.png" alt="SORA-9 赛博角色卡" loading="eager" decoding="async" />
+              <div class="role-caption"><strong>SORA-9</strong><span>城市预测 AI，声称只预测，却可能在执行预测。</span></div>
+            </article>
+            <article class="role-card">
+              <img src="../角色图片/05_岳临_赛博角色卡.png" alt="岳临赛博角色卡" loading="eager" decoding="async" />
+              <div class="role-caption"><strong>岳临</strong><span>玩家前搭档，删过定位，也留下纸质规则。</span></div>
+            </article>
+          </div>
+        </div>
+
+        <div class="demo-grid">
+          <div class="feature-grid">
+            <article class="feature-card"><span>Act System</span><h3>一案三幕推演</h3><p>第一幕找谎言，第二幕判断目的，第三幕选择公开口径。结构适合扩展成分幕续写。</p></article>
+            <article class="feature-card"><span>Agent Cast</span><h3>角色 Agent 驱动</h3><p>任舷、玛拉、SORA-9、岳临各有动机、隐瞒和信任变化，不只是固定台词。</p></article>
+            <article class="feature-card"><span>World State</span><h3>五类世界状态</h3><p>真相闭合度、记忆恢复、系统压力、整体信任、系统嫌疑，让剧情变化可视化。</p></article>
+            <article class="feature-card"><span>Dynamic Choice</span><h3>动态选项解锁</h3><p>上一幕选择会影响下一幕可选行动，形成可解释的剧情路径，而非简单树状分支。</p></article>
+            <article class="feature-card"><span>Live Stream</span><h3>SSE 实时推演流</h3><p>角色发言、状态变化、阶段报告逐条推送，适合路演现场展示“沙盘正在演化”。</p></article>
+            <article class="feature-card"><span>Ending Report</span><h3>多结局真相报告</h3><p>系统共谋、企业凶手落网、误判 AI、重启暗线、真相被掩盖，均由证据链决定。</p></article>
+          </div>
+
+          <aside class="timeline" aria-label="Neon Case 演示路径">
+            <h3>现场演示路径</h3>
+            <div class="timeline-item"><time>00:00</time><div><strong>展示案件设定</strong><p>林栖死亡、玩家失忆、城市预测模型，建立悬疑钩子。</p></div></div>
+            <div class="timeline-item"><time>00:40</time><div><strong>启动第一幕</strong><p>选择调查对象，观察角色证词和状态变化。</p></div></div>
+            <div class="timeline-item"><time>01:30</time><div><strong>解锁后续路线</strong><p>说明选择如何改变下一幕行动和证据链。</p></div></div>
+            <div class="timeline-item"><time>02:20</time><div><strong>生成结局报告</strong><p>从“谁撒谎”转向“谁设计了让所有人必须撒谎的系统”。</p></div></div>
+          </aside>
+        </div>
+
+        <div id="play" class="playbook" aria-label="3 分钟看懂 Neon Case Demo 玩法">
+          <h3>3 分钟看懂 Demo 玩法</h3>
+          <p>现场讲解时可以直接按这条线走：玩家不是阅读固定分支，而是在每一幕选择调查行动，观察 Agent 证词与世界状态如何变化，最后决定公开哪一种真相。</p>
+          <div class="play-layout">
+            <div class="play-steps">
+              <article class="play-step"><b>1</b><strong>读案件档案</strong><p>明确玩家身份、受害者林栖、四名嫌疑角色和核心规则：第一个撒谎的人不一定是凶手。</p></article>
+              <article class="play-step"><b>2</b><strong>选择公开线索</strong><p>电梯日志、记忆碎片、黑市票据、纸质笔记会影响真相、压力、信任和系统嫌疑。</p></article>
+              <article class="play-step"><b>3</b><strong>逐幕选择行动</strong><p>每一幕只能选一个动作，例如强压任舷、追问 SORA-9、相信岳临或保护玛拉。</p></article>
+              <article class="play-step"><b>4</b><strong>看实时推演流</strong><p>角色会发言，状态会变化，系统会提示本幕发现证明了什么、又遮住了什么。</p></article>
+              <article class="play-step"><b>5</b><strong>生成真相报告</strong><p>第三幕后得到多结局报告：系统共谋、企业落网、误判 AI、重启暗线或真相被掩盖。</p></article>
+            </div>
+            <aside class="route-card">
+              <b>荐</b>
+              <strong>路演推荐路线：稳健破案线</strong>
+              <p>这条路线最容易让听众理解反转：先抓住最像凶手的人，再证明真正危险的是系统。</p>
+              <ul class="route-list">
+                <li><span>A1</span><div>第一幕：强压任舷交出二级日志。</div></li>
+                <li><span>A2</span><div>第二幕：审计巡逻机器路径，把案件推向城市网络。</div></li>
+                <li><span>F</span><div>第三幕：揭露城市预测模型共谋，生成系统共谋结局。</div></li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="engine" class="band">
+        <div class="section">
+          <div class="section-head">
+            <div class="section-title">
+              <p class="eyebrow">Product Engine</p>
+              <h2>下一步：Drama Smallville 剧本试映风洞</h2>
+              <p>`script simulation` 已经探索出下一代商业化引擎：输入剧情材料，生成候选续写，让观众 Agent 和平台 Agent 进行两轮评价，最后输出推荐方案、置信度、关键分歧和改稿建议。</p>
+            </div>
+            <p class="section-note">Neon Case 证明“剧情可推演”，Drama Smallville 把它变成“剧本可试映、可评分、可改稿”。</p>
+          </div>
+
+          <div class="engine-flow" aria-label="剧本试映风洞流程">
+            <div class="flow-step"><b>STEP 1</b><strong>剧情材料</strong><p>角色设定、前情梗概、当前稿、作者意图和约束。</p></div>
+            <div class="flow-step"><b>STEP 2</b><strong>候选续写</strong><p>生成多个下一幕方向，对齐作者保留元素和禁用元素。</p></div>
+            <div class="flow-step"><b>STEP 3</b><strong>观众试映</strong><p>爽点、情感、付费、平台推流 Agent 分别判断。</p></div>
+            <div class="flow-step"><b>STEP 4</b><strong>加权评分</strong><p>留存、好评、付费、平台推荐和人设一致性聚合。</p></div>
+            <div class="flow-step"><b>STEP 5</b><strong>改稿报告</strong><p>输出推荐分支、分歧点、弃坑风险和下一轮 prompt。</p></div>
+          </div>
+
+          <div class="engine-layout">
+            <article class="screen-mock">
+              <p class="eyebrow">AI Virtual Screening Room</p>
+              <h3>从“写三个方向”到“让观众先看一遍”</h3>
+              <div class="screen-grid">
+                <div class="input-mock">
+                  <strong>输入</strong>
+                  <div class="input-line"></div>
+                  <div class="input-line"></div>
+                  <div class="input-line long"></div>
+                </div>
+                <div class="report-mock">
+                  <strong>输出报告</strong>
+                  <div class="score-card"><strong>draft_c <span>0.72</span></strong><p>冲突强、卡点明确，适合付费节点。</p></div>
+                  <div class="score-card"><strong>最大弃坑风险 <span>高</span></strong><p>主角主动性不足，需要前置布局证据。</p></div>
+                  <div class="score-card"><strong>最强付费触发 <span>身份真相</span></strong><p>保留钩子，不要在本集完全揭露。</p></div>
+                </div>
+              </div>
+            </article>
+
+            <aside class="metric-list" aria-label="爆款转化评分">
+              <div class="metric-item"><strong>钩子强度 <span>86</span></strong><div class="bar-track"><i style="width: 86%"></i></div></div>
+              <div class="metric-item"><strong>爽点密度 <span>78</span></strong><div class="bar-track"><i style="width: 78%"></i></div></div>
+              <div class="metric-item"><strong>反转可信度 <span>71</span></strong><div class="bar-track"><i style="width: 71%"></i></div></div>
+              <div class="metric-item"><strong>追更意愿 <span>82</span></strong><div class="bar-track"><i style="width: 82%"></i></div></div>
+              <div class="metric-item"><strong>付费冲动 <span>74</span></strong><div class="bar-track"><i style="width: 74%"></i></div></div>
+            </aside>
+          </div>
+
+          <div class="agent-grid">
+            <article class="agent-card"><span>Agent 01</span><h3>爽点追更型</h3><p>关注反杀、打脸、升级、主线推进，判断本集是否让人想继续看。</p></article>
+            <article class="agent-card"><span>Agent 02</span><h3>情感代入型</h3><p>关注误会、拉扯、守护、破防，检查情绪是否合理且能持续发酵。</p></article>
+            <article class="agent-card"><span>Agent 03</span><h3>付费解锁型</h3><p>关注身份、真相、证据和章末卡点，判断付费前是否留出足够未解信息。</p></article>
+            <article class="agent-card"><span>Agent 04</span><h3>平台推流 Agent</h3><p>关注完读、评论、分享、付费和标签清晰度，判断是否具备推荐信号。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="business" class="section">
+        <div class="section-head">
+          <div class="section-title">
+            <p class="eyebrow">Business Value</p>
+            <h2>不是通用写作助手，而是内容团队的爆款验证工作台</h2>
+            <p>产品价值来自“预测前置 + 改稿闭环 + 私有数据校准”。它不替代作者的判断，而是把团队经验、观众反应和平台目标变成可复盘的决策系统。</p>
+          </div>
+          <p class="section-note">商业表达聚焦短剧团队、网文作者、MCN 和内容工作室，不使用未经验证的市场规模数字。</p>
+        </div>
+
+        <div class="business-grid">
+          <article class="value-card">
+            <span>For Writers</span>
+            <h3>降低改稿焦虑</h3>
+            <p>作者可以输入当前剧情和创作约束，快速比较多个下一幕方向，看到哪条路线更适合留存、追更或付费。</p>
+            <ul class="check-list">
+              <li>保留作者意图，不强行替作者决定。</li>
+              <li>输出可执行改稿建议，而不是泛泛点评。</li>
+            </ul>
+          </article>
+          <article class="value-card">
+            <span>For Studios</span>
+            <h3>提高选题和分集决策效率</h3>
+            <p>短剧团队可以在拍摄前测试关键付费卡点、反转可信度和平台适配风险，减少后期重拍和投流浪费。</p>
+            <ul class="check-list">
+              <li>适合多版本 A/B 剧情试映。</li>
+              <li>适合复盘爆款案例和失败样本。</li>
+            </ul>
+          </article>
+          <article class="value-card">
+            <span>For Platforms</span>
+            <h3>沉淀私有观众模型</h3>
+            <p>随着真实完读、评论、付费数据接入，客户可以形成自己的观众偏好、平台权重和题材记忆。</p>
+            <ul class="check-list">
+              <li>支持不同平台、题材、目标的评分权重。</li>
+              <li>Trace 和 Memory 能形成长期数据壁垒。</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="model-strip" aria-label="商业模式">
+          <div class="model-pill"><strong>SaaS 订阅</strong><span>面向个人作者和小型工作室，按月使用虚拟试播能力。</span></div>
+          <div class="model-pill"><strong>按次试映</strong><span>按剧本、分集或候选方案计费，适合项目制团队。</span></div>
+          <div class="model-pill"><strong>团队版</strong><span>支持项目历史、多人协作、Trace 复盘和私有模板。</span></div>
+          <div class="model-pill"><strong>API / 私有化</strong><span>接入平台反馈数据，训练客户专属观众校准模型。</span></div>
+        </div>
+      </section>
+
+      <section id="roadmap" class="band">
+        <div class="section">
+          <div class="section-head">
+            <div class="section-title">
+              <p class="eyebrow">Roadmap</p>
+              <h2>从可玩 Demo 到可商业化引擎</h2>
+              <p>路线图以“先可演示，再可解释，再可校准”为原则。P0 不追求百万 Agent，而是把剧情试映闭环打通；P1 用统计拟合提升可信度；P2 接入真实数据形成壁垒。</p>
+            </div>
+            <p class="section-note">核心原则：真实宏观数据 -> 数学分布 -> 4-7 个代表 Agent -> 拟合校验 -> 轻量模拟。</p>
+          </div>
+
+          <div class="roadmap">
+            <article class="roadmap-card">
+              <span>P0</span>
+              <h3>可玩 Demo + 虚拟试播闭环</h3>
+              <p>证明剧情可以被状态变量和多 Agent 推演，也证明剧本可以被候选续写、观众试映和报告系统评估。</p>
+              <div class="status">已完成 / 已探索</div>
+              <ul>
+                <li>Neon Case 三幕互动推演。</li>
+                <li>角色 Agent、世界状态、多结局报告。</li>
+                <li>Drama Smallville simple-run 试播接口。</li>
+                <li>留存、好评、付费、平台推荐评分。</li>
+              </ul>
+            </article>
+            <article class="roadmap-card">
+              <span>P1</span>
+              <h3>统计拟合观众 Agent</h3>
+              <p>从手写人设升级为统计约束的代表性观众，前端可查看 Agent 画像、权重、阈值、拟合误差和 Trace。</p>
+              <div class="status">近期产品化</div>
+              <ul>
+                <li>行业统计初始化虚拟观众分布。</li>
+                <li>压缩为 4-7 个代表 Agent。</li>
+                <li>Trace、Memory、Population Fit 可视化。</li>
+                <li>支持短剧、网文、平台目标切换。</li>
+              </ul>
+            </article>
+            <article class="roadmap-card">
+              <span>P2</span>
+              <h3>真实反馈校准与私有模型</h3>
+              <p>接入客户历史项目数据，把预测结果和真实完读率、评论、付费转化对齐，形成持续学习的内容决策资产。</p>
+              <div class="status">商业化阶段</div>
+              <ul>
+                <li>导入完读率、追更率、评论关键词、付费率。</li>
+                <li>校准平台权重和 Agent 行为阈值。</li>
+                <li>建立客户私有爆款案例库。</li>
+                <li>支持团队版报告、API 和私有化部署。</li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="close-panel">
+            <h3>路演收束句</h3>
+            <p>Neon Case Studio 的价值不是“再做一个互动故事”，而是把互动故事背后的多 Agent 推演能力，升级成短剧和网文创作的试映基础设施：让爆款在上线前先被模拟、被质疑、被打分、被改好。</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>Neon Case Studio · Hackathon Roadshow</span>
+        <span>静态页面，可离线打开：D:\AI学习\Hackathon\汇报\index.html</span>
+      </div>
+    </footer>
+
+    <script>
+      const progress = document.getElementById("progress");
+      const links = Array.from(document.querySelectorAll(".nav a"));
+      const sections = links
+        .map((link) => document.querySelector(link.getAttribute("href")))
+        .filter(Boolean);
+
+      function updateProgress() {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+        progress.style.width = `${pct}%`;
+
+        let current = sections[0];
+        for (const section of sections) {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= 130) current = section;
+        }
+
+        links.forEach((link) => {
+          link.classList.toggle("active", link.getAttribute("href") === `#${current.id}`);
+        });
+      }
+
+      updateProgress();
+      window.addEventListener("scroll", updateProgress, { passive: true });
+      window.addEventListener("resize", updateProgress);
+    </script>
+  </body>
+</html>

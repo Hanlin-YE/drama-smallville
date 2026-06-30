@@ -1,0 +1,1035 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>作者试播工作台 Demo</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      :root {
+        color: #1d2430;
+        background: #eee9e0;
+        font-family:
+          Inter, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC",
+          system-ui, sans-serif;
+        font-synthesis: none;
+        line-height: 1.5;
+        --paper: #fbf8f1;
+        --paper-2: #f4efe5;
+        --ink: #1d2430;
+        --muted: #657080;
+        --line: rgba(70, 62, 48, 0.16);
+        --glass: rgba(255, 255, 255, 0.58);
+        --teal: #236f63;
+        --teal-2: #e6f3ef;
+        --amber: #b66b24;
+        --amber-2: #fff1dc;
+        --red: #b33a32;
+        --red-2: #fff0ee;
+        --violet: #66539b;
+        --shadow: 0 18px 50px rgba(54, 43, 25, 0.13);
+      }
+
+      body {
+        min-width: 320px;
+        margin: 0;
+        background:
+          linear-gradient(rgba(35, 111, 99, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(35, 111, 99, 0.04) 1px, transparent 1px),
+          radial-gradient(circle at 20% 0%, rgba(182, 107, 36, 0.12), transparent 32%),
+          #eee9e0;
+        background-size: 28px 28px, 28px 28px, auto, auto;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      .appShell {
+        min-height: 100vh;
+        padding: 18px;
+      }
+
+      .topbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        align-items: center;
+        gap: 14px;
+        max-width: 1520px;
+        min-height: 58px;
+        margin: 0 auto 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(251, 248, 241, 0.78);
+        box-shadow: 0 10px 30px rgba(54, 43, 25, 0.08);
+        backdrop-filter: blur(18px);
+        padding: 10px 14px;
+      }
+
+      .brand {
+        display: flex;
+        min-width: 0;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brandMark {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        border-radius: 7px;
+        background: #1d2430;
+        color: #f7efe0;
+        font-size: 15px;
+        font-weight: 900;
+      }
+
+      .brand strong,
+      .draftTitle strong,
+      .panelTitle strong {
+        display: block;
+        overflow: hidden;
+        color: var(--ink);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .brand span,
+      .draftTitle span,
+      .panelTitle span,
+      .meta,
+      .muted {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .topMetrics {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .chip,
+      .status,
+      .tabButton,
+      .persona,
+      .togglePill {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.52);
+        color: #364050;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: 30px;
+        padding: 5px 10px;
+        white-space: nowrap;
+      }
+
+      .status {
+        min-height: 34px;
+        padding: 7px 11px;
+        color: var(--teal);
+      }
+
+      .workspace {
+        display: grid;
+        grid-template-columns: minmax(320px, 420px) minmax(0, 1fr) minmax(280px, 350px);
+        gap: 14px;
+        max-width: 1520px;
+        margin: 0 auto;
+      }
+
+      .writerPane,
+      .decisionPane,
+      .signalPane {
+        min-height: calc(100vh - 108px);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+
+      .writerPane {
+        display: grid;
+        grid-template-rows: auto auto minmax(320px, 1fr) auto auto;
+        gap: 14px;
+        background: var(--paper);
+        box-shadow: var(--shadow);
+        padding: 18px;
+      }
+
+      .decisionPane {
+        display: grid;
+        grid-template-rows: auto auto minmax(0, 1fr);
+        gap: 14px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.44);
+        backdrop-filter: blur(20px);
+        padding: 18px;
+      }
+
+      .signalPane {
+        display: grid;
+        grid-template-rows: auto auto minmax(0, 1fr);
+        gap: 14px;
+        overflow: hidden;
+        background: rgba(251, 248, 241, 0.76);
+        backdrop-filter: blur(16px);
+        padding: 16px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        margin-bottom: 6px;
+        color: var(--ink);
+        font-size: clamp(26px, 2.3vw, 40px);
+        line-height: 1.08;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin-bottom: 0;
+        font-size: 19px;
+        line-height: 1.25;
+        letter-spacing: 0;
+      }
+
+      h3 {
+        margin-bottom: 0;
+        font-size: 15px;
+        line-height: 1.3;
+        letter-spacing: 0;
+      }
+
+      label {
+        display: grid;
+        gap: 7px;
+        min-width: 0;
+        color: #384150;
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        min-width: 0;
+        border: 1px solid rgba(70, 62, 48, 0.18);
+        border-radius: 8px;
+        outline: none;
+        background: rgba(255, 255, 255, 0.58);
+        color: var(--ink);
+        padding: 10px 11px;
+      }
+
+      textarea {
+        min-height: 100%;
+        resize: none;
+        background:
+          linear-gradient(transparent 31px, rgba(70, 62, 48, 0.08) 32px),
+          rgba(255, 255, 255, 0.5);
+        background-size: 100% 32px;
+        font-family: "LXGW WenKai", "Kaiti SC", "STKaiti", serif;
+        font-size: 17px;
+        line-height: 32px;
+        padding: 13px 14px;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: rgba(35, 111, 99, 0.72);
+        box-shadow: 0 0 0 3px rgba(35, 111, 99, 0.12);
+      }
+
+      .formGrid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 10px;
+      }
+
+      .segment {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 4px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.5);
+        padding: 4px;
+      }
+
+      .segment button {
+        min-height: 34px;
+        border: 0;
+        border-radius: 6px;
+        background: transparent;
+        color: #4c5667;
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .segment button.active {
+        background: #1d2430;
+        color: #fff7e8;
+      }
+
+      .editorFooter,
+      .panelHeader,
+      .rowBetween {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .editorFooter {
+        flex-wrap: wrap;
+        border-top: 1px solid var(--line);
+        padding-top: 12px;
+      }
+
+      .primaryButton,
+      .ghostButton {
+        min-height: 42px;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-weight: 900;
+      }
+
+      .primaryButton {
+        border: 0;
+        background: var(--teal);
+        color: #ffffff;
+        box-shadow: 0 12px 28px rgba(35, 111, 99, 0.22);
+      }
+
+      .ghostButton {
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.52);
+        color: #3b4656;
+      }
+
+      .heroDecision {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 16px;
+        border: 1px solid rgba(35, 111, 99, 0.18);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.64);
+        box-shadow: 0 16px 38px rgba(54, 43, 25, 0.09);
+        padding: 18px;
+      }
+
+      .heroDecision p {
+        max-width: 760px;
+        margin-bottom: 0;
+        color: #485466;
+      }
+
+      .confidence {
+        display: grid;
+        min-width: 124px;
+        place-items: center;
+        border-left: 1px solid var(--line);
+        padding-left: 16px;
+      }
+
+      .confidence strong {
+        color: var(--teal);
+        font-size: 32px;
+        line-height: 1;
+      }
+
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(251, 248, 241, 0.5);
+        padding: 6px;
+      }
+
+      .tabButton {
+        min-height: 34px;
+        padding: 7px 12px;
+      }
+
+      .tabButton.active {
+        border-color: rgba(35, 111, 99, 0.28);
+        background: var(--teal-2);
+        color: var(--teal);
+      }
+
+      .contentScroll,
+      .signalScroll {
+        overflow: auto;
+        padding-right: 2px;
+      }
+
+      .decisionGrid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .briefCard,
+      .draftCard,
+      .metricCard,
+      .beatCard,
+      .noteCard,
+      .audienceCard {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.62);
+      }
+
+      .briefCard {
+        display: grid;
+        gap: 10px;
+        min-height: 148px;
+        padding: 14px;
+      }
+
+      .briefCard.good {
+        border-top: 4px solid var(--teal);
+      }
+
+      .briefCard.warn {
+        border-top: 4px solid var(--amber);
+      }
+
+      .briefCard.risk {
+        border-top: 4px solid var(--red);
+      }
+
+      .briefCard p,
+      .noteCard p,
+      .audienceCard p {
+        margin-bottom: 0;
+        color: #465263;
+      }
+
+      .draftCompare {
+        display: grid;
+        grid-template-columns: 235px minmax(0, 1fr);
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .draftList {
+        display: grid;
+        gap: 8px;
+        align-content: start;
+      }
+
+      .draftButton {
+        display: grid;
+        gap: 7px;
+        width: 100%;
+        min-height: 88px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.52);
+        color: inherit;
+        padding: 11px;
+        text-align: left;
+      }
+
+      .draftButton.active {
+        border-color: rgba(35, 111, 99, 0.42);
+        background: var(--teal-2);
+      }
+
+      .draftCard {
+        display: grid;
+        gap: 13px;
+        min-height: 314px;
+        padding: 16px;
+      }
+
+      .draftTitle {
+        min-width: 0;
+      }
+
+      .scoreLine {
+        display: grid;
+        gap: 7px;
+      }
+
+      .scoreLine > div:first-child {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        color: #4b5665;
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .track {
+        height: 8px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(29, 36, 48, 0.09);
+      }
+
+      .track span {
+        display: block;
+        width: var(--value);
+        height: 100%;
+        border-radius: inherit;
+        background: var(--teal);
+      }
+
+      .track .warn {
+        background: var(--amber);
+      }
+
+      .track .risk {
+        background: var(--red);
+      }
+
+      .noteGrid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .noteCard {
+        display: grid;
+        gap: 8px;
+        padding: 13px;
+      }
+
+      .signalPane h2 {
+        margin-bottom: 6px;
+      }
+
+      .metricStack,
+      .beatStack,
+      .personaStack {
+        display: grid;
+        gap: 10px;
+      }
+
+      .metricCard {
+        display: grid;
+        gap: 8px;
+        padding: 12px;
+      }
+
+      .metricCard .value {
+        color: var(--ink);
+        font-size: 22px;
+        font-weight: 950;
+        line-height: 1;
+      }
+
+      .metricCard .rowBetween {
+        align-items: baseline;
+      }
+
+      .beatCard {
+        display: grid;
+        gap: 9px;
+        padding: 12px;
+      }
+
+      .beatItem {
+        display: grid;
+        grid-template-columns: 58px minmax(0, 1fr) 38px;
+        align-items: center;
+        gap: 8px;
+        color: #465263;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .personaStack {
+        margin-top: 10px;
+      }
+
+      .persona {
+        display: grid;
+        grid-template-columns: 34px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 9px;
+        border-radius: 8px;
+        padding: 8px;
+      }
+
+      .avatar {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        border-radius: 50%;
+        background: #f1e1c8;
+        color: #70410f;
+        font-weight: 950;
+      }
+
+      .persona strong {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .togglePill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        min-height: 30px;
+        padding: 5px 9px;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--teal);
+      }
+
+      .drawer {
+        display: none;
+        margin-top: 12px;
+      }
+
+      .drawer.active {
+        display: grid;
+        gap: 10px;
+      }
+
+      .evidenceItem {
+        border-left: 3px solid var(--violet);
+        padding-left: 10px;
+      }
+
+      .evidenceItem p {
+        margin-bottom: 3px;
+        color: #445061;
+      }
+
+      @media (max-width: 1220px) {
+        .workspace {
+          grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+        }
+
+        .signalPane {
+          grid-column: 1 / -1;
+          min-height: auto;
+        }
+
+        .signalScroll {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 12px;
+          overflow: visible;
+        }
+      }
+
+      @media (max-width: 860px) {
+        .appShell {
+          padding: 10px;
+        }
+
+        .topbar,
+        .workspace,
+        .heroDecision,
+        .draftCompare,
+        .noteGrid,
+        .decisionGrid,
+        .signalScroll {
+          grid-template-columns: 1fr;
+        }
+
+        .topbar {
+          gap: 10px;
+        }
+
+        .writerPane,
+        .decisionPane,
+        .signalPane {
+          min-height: auto;
+          padding: 14px;
+        }
+
+        .writerPane {
+          grid-template-rows: auto auto 360px auto auto;
+        }
+
+        .confidence {
+          justify-items: start;
+          border-left: 0;
+          border-top: 1px solid var(--line);
+          padding-top: 12px;
+          padding-left: 0;
+        }
+
+        .segment {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="appShell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brandMark">写</span>
+          <div>
+            <strong>作者试播工作台</strong>
+            <span>短剧 / 网文 · 付费点 · 留存 · 改稿判断</span>
+          </div>
+        </div>
+        <div class="topMetrics" aria-label="项目状态">
+          <span class="chip">第 18 集</span>
+          <span class="chip">女频逆袭</span>
+          <span class="chip">目标：付费转化</span>
+        </div>
+        <span class="status">试播样稿</span>
+      </header>
+
+      <section class="workspace">
+        <aside class="writerPane" aria-label="写作输入区">
+          <div>
+            <p class="meta">Project</p>
+            <h1>镜城零点案</h1>
+          </div>
+
+          <div class="formGrid">
+            <label>
+              平台
+              <select>
+                <option>微信小程序短剧</option>
+                <option>抖音短剧</option>
+                <option>番茄小说</option>
+                <option>起点</option>
+              </select>
+            </label>
+            <label>
+              题材
+              <input value="悬疑逆袭、强反转" />
+            </label>
+          </div>
+
+          <label>
+            正文稿
+            <textarea id="scriptText">女主林照在零点收到父亲留下的旧手机。屏幕自动亮起，里面只有一段三年前的录音。
+
+录音里，父亲压低声音说：如果你听到这里，说明顾沉已经开始怀疑你。
+
+她抬头，正看见顾沉站在门外。男人没有解释，只把一张亲子鉴定放在桌上。
+
+林照终于明白，自己不是被卷进旧案的人，而是旧案最后一枚证据。</textarea>
+          </label>
+
+          <div class="formGrid">
+            <label>
+              必须保留
+              <input value="女主主动、旧手机、亲子鉴定" />
+            </label>
+            <label>
+              避免元素
+              <input value="男主强行洗白、无铺垫反转" />
+            </label>
+          </div>
+
+          <div class="editorFooter">
+            <span class="muted" id="wordCount">0 字 · 4 段</span>
+            <div class="rowBetween">
+              <button class="ghostButton" type="button" id="toggleEvidence">证据链</button>
+              <button class="primaryButton" type="button">开始试播</button>
+            </div>
+          </div>
+        </aside>
+
+        <section class="decisionPane" aria-label="试播结果区">
+          <section class="heroDecision">
+            <div>
+              <p class="meta">Pilot Decision</p>
+              <h2>推荐使用 B 案：把亲子鉴定前置为误导，集尾改成旧手机自动拨号。</h2>
+              <p>
+                当前稿件钩子足够清楚，但付费点落在解释层。把证据推进到动作层，会让观众更想看下一集。
+              </p>
+            </div>
+            <div class="confidence">
+              <strong>78%</strong>
+              <span class="muted">中高置信</span>
+            </div>
+          </section>
+
+          <nav class="tabs" aria-label="结果标签">
+            <button class="tabButton active" type="button" data-tab="rewrite">改稿单</button>
+            <button class="tabButton" type="button" data-tab="drafts">候选稿</button>
+            <button class="tabButton" type="button" data-tab="evidence">证据链</button>
+          </nav>
+
+          <div class="contentScroll">
+            <section class="drawer active" id="rewrite">
+              <div class="decisionGrid">
+                <article class="briefCard risk">
+                  <h3>必须修</h3>
+                  <p>顾沉出现太早像解释工具。让他先留下一个行为矛盾，再进入对峙。</p>
+                </article>
+                <article class="briefCard good">
+                  <h3>必须留</h3>
+                  <p>旧手机、零点、父亲录音是强识别物，适合做系列记忆点。</p>
+                </article>
+                <article class="briefCard warn">
+                  <h3>下一轮提示</h3>
+                  <p>保留女主清醒主动，把亲子鉴定改成假证据，集尾用拨号制造危险。</p>
+                </article>
+              </div>
+
+              <div class="noteGrid">
+                <article class="noteCard">
+                  <h3>作者意图保护</h3>
+                  <p>女主不需要被男主拯救。改稿建议只调整信息释放，不改变人物主动权。</p>
+                </article>
+                <article class="noteCard">
+                  <h3>付费点判断</h3>
+                  <p>最强付费点不是“她是谁”，而是“谁在用旧手机继续操控她”。</p>
+                </article>
+              </div>
+            </section>
+
+            <section class="drawer" id="drafts">
+              <div class="draftCompare">
+                <div class="draftList">
+                  <button class="draftButton active" type="button" data-draft="A">
+                    <strong>A 案 · 原钩子强化</strong>
+                    <span class="muted">留存 71 · 付费 64</span>
+                  </button>
+                  <button class="draftButton" type="button" data-draft="B">
+                    <strong>B 案 · 误导证据</strong>
+                    <span class="muted">留存 82 · 付费 79</span>
+                  </button>
+                  <button class="draftButton" type="button" data-draft="C">
+                    <strong>C 案 · 情绪爆发</strong>
+                    <span class="muted">留存 76 · 付费 68</span>
+                  </button>
+                </div>
+                <article class="draftCard">
+                  <div class="rowBetween">
+                    <div class="draftTitle">
+                      <strong id="draftName">A 案 · 原钩子强化</strong>
+                      <span id="draftTag">适合保守改稿</span>
+                    </div>
+                    <span class="chip" id="draftScore">综合 72</span>
+                  </div>
+                  <p id="draftCopy">
+                    父亲录音后延三句，先让女主通过旧手机发现顾沉撒谎，再给出亲子鉴定。
+                  </p>
+                  <div class="scoreLine">
+                    <div><span>留存</span><strong id="retentionText">71%</strong></div>
+                    <div class="track"><span id="retentionBar" style="--value: 71%"></span></div>
+                  </div>
+                  <div class="scoreLine">
+                    <div><span>付费</span><strong id="payText">64%</strong></div>
+                    <div class="track"><span class="warn" id="payBar" style="--value: 64%"></span></div>
+                  </div>
+                  <div class="scoreLine">
+                    <div><span>弃坑风险</span><strong id="riskText">28%</strong></div>
+                    <div class="track"><span class="risk" id="riskBar" style="--value: 28%"></span></div>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section class="drawer" id="evidence">
+              <article class="noteCard">
+                <h3>Trace 摘要</h3>
+                <div class="evidenceItem">
+                  <p>剧本医生：第 2 段信息密度高，但冲突动作不足。</p>
+                  <span class="muted">continuity_review · score 0.74</span>
+                </div>
+                <div class="evidenceItem">
+                  <p>付费型观众：旧手机自动拨号比亲子鉴定更像下一集入口。</p>
+                  <span class="muted">paid_persona · round 2</span>
+                </div>
+                <div class="evidenceItem">
+                  <p>爽文型观众：女主识破假证据时好感上升，男主解释过早会降温。</p>
+                  <span class="muted">emotion_persona · round 1</span>
+                </div>
+              </article>
+            </section>
+          </div>
+        </section>
+
+        <aside class="signalPane" aria-label="观众和节奏侧栏">
+          <div class="panelHeader">
+            <div class="panelTitle">
+              <strong>试播信号</strong>
+              <span>6 个代表观众 · Round 2</span>
+            </div>
+            <span class="togglePill"><i class="dot"></i> 在线</span>
+          </div>
+
+          <div class="signalScroll">
+            <section class="metricStack">
+              <article class="metricCard">
+                <div class="rowBetween"><span class="muted">继续看</span><span class="value">82%</span></div>
+                <div class="track"><span style="--value: 82%"></span></div>
+              </article>
+              <article class="metricCard">
+                <div class="rowBetween"><span class="muted">愿付费</span><span class="value">79%</span></div>
+                <div class="track"><span style="--value: 79%"></span></div>
+              </article>
+              <article class="metricCard">
+                <div class="rowBetween"><span class="muted">弃坑</span><span class="value">19%</span></div>
+                <div class="track"><span class="risk" style="--value: 19%"></span></div>
+              </article>
+            </section>
+
+            <section class="beatStack">
+              <article class="beatCard">
+                <h3>节奏条</h3>
+                <div class="beatItem">
+                  <span>开场</span>
+                  <div class="track"><span style="--value: 74%"></span></div>
+                  <strong>稳</strong>
+                </div>
+                <div class="beatItem">
+                  <span>对峙</span>
+                  <div class="track"><span class="warn" style="--value: 58%"></span></div>
+                  <strong>虚</strong>
+                </div>
+                <div class="beatItem">
+                  <span>集尾</span>
+                  <div class="track"><span style="--value: 86%"></span></div>
+                  <strong>强</strong>
+                </div>
+              </article>
+
+              <article class="audienceCard">
+                <h3>高亮信号</h3>
+                <p>触发点：旧手机、零点录音、女主反向试探。</p>
+                <p>风险点：男主解释过早，亲子鉴定像模板反转。</p>
+              </article>
+            </section>
+
+            <section class="personaStack">
+              <article class="persona">
+                <span class="avatar">爽</span>
+                <div><strong>强爽点读者</strong><span class="muted">偏好立刻反击</span></div>
+                <span>84</span>
+              </article>
+              <article class="persona">
+                <span class="avatar">悬</span>
+                <div><strong>悬疑追更党</strong><span class="muted">偏好证据链</span></div>
+                <span>81</span>
+              </article>
+              <article class="persona">
+                <span class="avatar">付</span>
+                <div><strong>付费解锁型</strong><span class="muted">偏好集尾钩子</span></div>
+                <span>79</span>
+              </article>
+            </section>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <script>
+      const tabs = document.querySelectorAll(".tabButton");
+      const drawers = document.querySelectorAll(".drawer");
+      const scriptText = document.querySelector("#scriptText");
+      const wordCount = document.querySelector("#wordCount");
+      const evidenceButton = document.querySelector("#toggleEvidence");
+      const draftData = {
+        A: {
+          name: "A 案 · 原钩子强化",
+          tag: "适合保守改稿",
+          score: "综合 72",
+          copy: "父亲录音后延三句，先让女主通过旧手机发现顾沉撒谎，再给出亲子鉴定。",
+          retention: 71,
+          pay: 64,
+          risk: 28
+        },
+        B: {
+          name: "B 案 · 误导证据",
+          tag: "推荐主方案",
+          score: "综合 80",
+          copy: "亲子鉴定先出现但后来证明是假证据，旧手机在集尾自动拨给真正幕后人。",
+          retention: 82,
+          pay: 79,
+          risk: 19
+        },
+        C: {
+          name: "C 案 · 情绪爆发",
+          tag: "适合强情绪平台",
+          score: "综合 74",
+          copy: "女主当场撕碎鉴定并公开反击顾沉，情绪强但悬疑后劲略低。",
+          retention: 76,
+          pay: 68,
+          risk: 25
+        }
+      };
+
+      function activateTab(name) {
+        tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.tab === name));
+        drawers.forEach((drawer) => drawer.classList.toggle("active", drawer.id === name));
+      }
+
+      function updateWordCount() {
+        const text = scriptText.value.trim();
+        const paragraphs = text ? text.split(/\n+/).filter(Boolean).length : 0;
+        const count = text.replace(/\s/g, "").length;
+        wordCount.textContent = `${count} 字 · ${paragraphs} 段`;
+      }
+
+      function setDraft(key) {
+        const data = draftData[key];
+        document.querySelectorAll(".draftButton").forEach((button) => {
+          button.classList.toggle("active", button.dataset.draft === key);
+        });
+        document.querySelector("#draftName").textContent = data.name;
+        document.querySelector("#draftTag").textContent = data.tag;
+        document.querySelector("#draftScore").textContent = data.score;
+        document.querySelector("#draftCopy").textContent = data.copy;
+        document.querySelector("#retentionText").textContent = `${data.retention}%`;
+        document.querySelector("#payText").textContent = `${data.pay}%`;
+        document.querySelector("#riskText").textContent = `${data.risk}%`;
+        document.querySelector("#retentionBar").style.setProperty("--value", `${data.retention}%`);
+        document.querySelector("#payBar").style.setProperty("--value", `${data.pay}%`);
+        document.querySelector("#riskBar").style.setProperty("--value", `${data.risk}%`);
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => activateTab(tab.dataset.tab));
+      });
+
+      document.querySelectorAll(".draftButton").forEach((button) => {
+        button.addEventListener("click", () => setDraft(button.dataset.draft));
+      });
+
+      evidenceButton.addEventListener("click", () => activateTab("evidence"));
+      scriptText.addEventListener("input", updateWordCount);
+      updateWordCount();
+    </script>
+  </body>
+</html>

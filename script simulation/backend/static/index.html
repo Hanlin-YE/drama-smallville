@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drama Smallville</title>
+    <style>
+      :root {
+        color: #182235;
+        background: #f6f7f2;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      .app {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: minmax(360px, 0.9fr) minmax(440px, 1.1fr);
+      }
+
+      .panel {
+        padding: 32px;
+      }
+
+      .input {
+        background: #fbfcf8;
+        border-right: 1px solid #d9ded3;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: #607057;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        margin-bottom: 8px;
+        font-size: 32px;
+        letter-spacing: 0;
+      }
+
+      .sub {
+        color: #667085;
+        line-height: 1.6;
+      }
+
+      form {
+        display: grid;
+        gap: 16px;
+        margin-top: 26px;
+      }
+
+      label {
+        display: grid;
+        gap: 7px;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        border: 1px solid #cfd6c7;
+        border-radius: 8px;
+        padding: 11px 12px;
+        background: #fff;
+        color: #182235;
+        font: inherit;
+      }
+
+      textarea {
+        min-height: 320px;
+        resize: vertical;
+        line-height: 1.55;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      button {
+        border: 0;
+        border-radius: 8px;
+        padding: 13px 16px;
+        background: #2f6b4f;
+        color: white;
+        font: inherit;
+        font-weight: 900;
+        cursor: pointer;
+      }
+
+      button:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .result {
+        display: grid;
+        align-content: start;
+        gap: 16px;
+      }
+
+      .card {
+        border: 1px solid #d9ded3;
+        border-radius: 8px;
+        background: white;
+        padding: 18px;
+      }
+
+      .empty {
+        color: #667085;
+        line-height: 1.6;
+      }
+
+      .scoreGrid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .score {
+        display: grid;
+        gap: 6px;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .score:hover {
+        border-color: #8aa58f;
+      }
+
+      .score strong {
+        font-size: 18px;
+      }
+
+      .score span {
+        color: #2f6b4f;
+        font-weight: 900;
+      }
+
+      .score small {
+        color: #667085;
+      }
+
+      .draftDetail {
+        display: grid;
+        gap: 14px;
+      }
+
+      .beats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 0;
+        list-style: none;
+      }
+
+      .beats li {
+        margin: 0;
+        border-radius: 999px;
+        background: #edf3ea;
+        color: #2f6b4f;
+        padding: 6px 10px;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      li {
+        margin-bottom: 8px;
+        line-height: 1.5;
+      }
+
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        line-height: 1.55;
+        background: #f6f7f2;
+        border-radius: 8px;
+        padding: 14px;
+        overflow: auto;
+      }
+
+      .error {
+        color: #b42318;
+        font-weight: 700;
+      }
+
+      @media (max-width: 900px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+
+        .input {
+          border-right: 0;
+          border-bottom: 1px solid #d9ded3;
+        }
+
+        .row,
+        .scoreGrid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <section class="panel input">
+        <p class="eyebrow">Drama Smallville P1</p>
+        <h1>AI 虚拟试播间</h1>
+        <p class="sub">粘贴剧情文本，系统会生成候选方案，模拟观众和平台反馈，并给出改稿建议。</p>
+
+        <form id="form">
+          <label>
+            剧名
+            <input id="title" value="Neon Case：镜城零点案" />
+          </label>
+
+          <div class="row">
+            <label>
+              平台
+              <select id="platform">
+                <option value="wechat_minidrama">微信小程序短剧</option>
+                <option value="douyin_short_drama">抖音短剧</option>
+                <option value="kuaishou_short_drama">快手短剧</option>
+                <option value="fanqie">番茄</option>
+                <option value="qidian">起点</option>
+                <option value="jinjiang">晋江</option>
+                <option value="other" selected>其他</option>
+              </select>
+            </label>
+
+            <label>
+              目标
+              <select id="goal">
+                <option value="retention" selected>留存</option>
+                <option value="positive_review">好评</option>
+                <option value="paid_conversion">付费</option>
+                <option value="platform_recommendation">平台推荐</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            剧情文本
+            <textarea id="text" placeholder="把当前剧情、人物设定、剧本片段粘贴到这里..."></textarea>
+          </label>
+
+          <button id="submit" type="submit">开始虚拟试播</button>
+          <p id="error" class="error"></p>
+        </form>
+      </section>
+
+      <section class="panel result" id="result">
+        <div class="card empty">结果会显示在这里。你不需要再使用 Swagger。</div>
+      </section>
+    </main>
+
+    <script>
+      const form = document.getElementById("form");
+      const result = document.getElementById("result");
+      const errorBox = document.getElementById("error");
+      const submit = document.getElementById("submit");
+      let latestReport = null;
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        errorBox.textContent = "";
+        const title = document.getElementById("title").value.trim() || "未命名故事";
+        const text = document.getElementById("text").value.trim();
+        const platform_type = document.getElementById("platform").value;
+        const business_goal = document.getElementById("goal").value;
+
+        if (!text) {
+          errorBox.textContent = "请先粘贴剧情文本。";
+          return;
+        }
+
+        submit.disabled = true;
+        submit.textContent = "模拟中...";
+        result.innerHTML = '<div class="card empty">正在生成候选剧情并模拟观众反馈...</div>';
+
+        try {
+          const response = await fetch("/api/drama/simple-run", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              title,
+              text,
+              platform_type,
+              business_goal,
+              genre: ["剧情测试"],
+              author_intent: "希望系统判断下一步剧情如何更适合留存、好评和付费。",
+              constraints: ["不要替作者做最终决定", "输出可执行改稿建议"],
+              must_keep_elements: ["核心冲突", "人物动机", "下一步钩子"],
+              avoid_elements: ["强行完结", "无解释反转"]
+            })
+          });
+
+          if (!response.ok) {
+            throw new Error(`接口返回 ${response.status}`);
+          }
+
+          latestReport = await response.json();
+          render(latestReport);
+        } catch (error) {
+          errorBox.textContent = error.message || "请求失败。";
+          result.innerHTML = '<div class="card empty">运行失败，请确认后端服务仍在运行。</div>';
+        } finally {
+          submit.disabled = false;
+          submit.textContent = "开始虚拟试播";
+        }
+      });
+
+      function render(report) {
+        const scores = (report.quality_scores || [])
+          .map((score) => `
+            <article class="card score" tabindex="0" role="button" onclick="showDraftDetail('${escapeAttr(score.draft_id)}')" onkeydown="if(event.key==='Enter'){showDraftDetail('${escapeAttr(score.draft_id)}')}">
+              <strong>${escapeHtml(score.draft_id)}</strong>
+              <span>综合 ${Number(score.final_score).toFixed(2)}</span>
+              <small>留存 ${Number(score.retention_score).toFixed(2)}</small>
+              <small>好评 ${Number(score.positive_review_score).toFixed(2)}</small>
+              <small>付费 ${Number(score.paid_conversion_score).toFixed(2)}</small>
+            </article>
+          `)
+          .join("");
+
+        result.innerHTML = `
+          <div class="card">
+            <p class="eyebrow">推荐结果</p>
+            <h2>${report.no_strong_recommendation ? "暂无强推荐方案" : escapeHtml(report.recommended_draft_id || "无")}</h2>
+            <p>置信度：${escapeHtml(report.confidence_level || "-")} / ${Number(report.confidence_score || 0).toFixed(2)}</p>
+            <p>初始最高分：${escapeHtml(report.initial_winner_draft_id || "无")}；最终推荐：${escapeHtml(report.recommended_draft_id || "无")}</p>
+          </div>
+
+          <div class="scoreGrid">${scores}</div>
+
+          <div id="draftDetail" class="card draftDetail">
+            ${draftDetailHtml(report, report.recommended_draft_id || (report.quality_scores && report.quality_scores[0] && report.quality_scores[0].draft_id))}
+          </div>
+
+          <div class="card">
+            <h3>关键分歧</h3>
+            <ul>${list(report.key_disagreements)}</ul>
+          </div>
+
+          <div class="card">
+            <h3>改稿建议</h3>
+            <ul>${list(report.rewrite_recommendations)}</ul>
+          </div>
+
+          <div class="card">
+            <h3>报告</h3>
+            <pre>${escapeHtml(report.markdown || "暂无 Markdown 报告。")}</pre>
+          </div>
+        `;
+      }
+
+      window.showDraftDetail = function(draftId) {
+        const detail = document.getElementById("draftDetail");
+        if (!detail || !latestReport) return;
+        detail.innerHTML = draftDetailHtml(latestReport, draftId);
+      }
+
+      function draftDetailHtml(report, draftId) {
+        const draft = (report.candidate_drafts || []).find((item) => item.draft_id === draftId);
+        const score = (report.quality_scores || []).find((item) => item.draft_id === draftId);
+        const reviews = (report.creative_reviews || []).filter((item) => item.draft_id === draftId);
+        const judgments = (report.audience_judgments || []).filter((item) => item.draft_id === draftId && item.round_id === "round_1");
+        if (!draft) {
+          return `<h3>草稿详情</h3><p class="empty">暂无草稿内容。</p>`;
+        }
+        return `
+          <div>
+            <p class="eyebrow">草稿详情</p>
+            <h2>${escapeHtml(draft.draft_id)} · ${escapeHtml(draft.title)}</h2>
+            <p>${escapeHtml(draft.synopsis)}</p>
+          </div>
+
+          <div>
+            <h3>关键节拍</h3>
+            <ul class="beats">${(draft.key_beats || []).map((beat) => `<li>${escapeHtml(beat)}</li>`).join("") || "<li>暂无</li>"}</ul>
+          </div>
+
+          <div>
+            <h3>意图</h3>
+            <p>钩子：${escapeHtml(draft.intended_hook || "暂无")}</p>
+            <p>情绪：${escapeHtml(draft.intended_emotion || "暂无")}</p>
+            <p>期望动作：${escapeHtml(draft.expected_reader_action || "暂无")}</p>
+          </div>
+
+          ${score ? `
+            <div>
+              <h3>评分拆解</h3>
+              <p>综合 ${Number(score.final_score).toFixed(2)}；留存 ${Number(score.retention_score).toFixed(2)}；好评 ${Number(score.positive_review_score).toFixed(2)}；付费 ${Number(score.paid_conversion_score).toFixed(2)}；平台 ${Number(score.platform_recommendation_score).toFixed(2)}</p>
+            </div>
+          ` : ""}
+
+          <div>
+            <h3>创作参谋</h3>
+            <ul>${reviews.length ? reviews.map((item) => `<li><strong>${escapeHtml(item.agent_id)}</strong>：${escapeHtml(item.opinion)} 建议：${escapeHtml(item.suggested_revision)}</li>`).join("") : "<li>暂无。</li>"}</ul>
+          </div>
+
+          <div>
+            <h3>观众反馈</h3>
+            <ul>${judgments.length ? judgments.map((item) => `<li><strong>${escapeHtml(item.agent_id)}</strong>：留存 ${Number(item.continue_watch).toFixed(2)}，付费 ${Number(item.pay).toFixed(2)}。触发：${escapeHtml((item.trigger_points || [])[0] || "暂无")}；风险：${escapeHtml((item.risk_points || [])[0] || "暂无")}</li>`).join("") : "<li>暂无。</li>"}</ul>
+          </div>
+        `;
+      }
+
+      function list(items) {
+        if (!items || !items.length) return "<li>暂无。</li>";
+        return items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function escapeAttr(value) {
+        return String(value).replaceAll("\\", "\\\\").replaceAll("'", "\\'");
+      }
+    </script>
+  </body>
+</html>
